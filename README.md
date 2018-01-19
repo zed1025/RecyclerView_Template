@@ -454,76 +454,7 @@ new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL,
 ```
 
 ## Adding RecyclerView Item Click Listener
-RecyclerView doesn’t have OnItemClickListener method too to identify item click. You need to write your own class extending RecyclerView.OnItemTouchListener.
-
-Create a class named RecyclerTouchListener.java and extend it from RecyclerView.OnItemTouchListener. You can notice that ClickListener interface also added here.
-
-```java
-public interface ClickListener {
-        void onClick(View view, int position);
- 
-        void onLongClick(View view, int position);
-    }
- 
-    public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
- 
-        private GestureDetector gestureDetector;
-        private MainActivity.ClickListener clickListener;
- 
-        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final MainActivity.ClickListener clickListener) {
-            this.clickListener = clickListener;
-            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
- 
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                    if (child != null && clickListener != null) {
-                        clickListener.onLongClick(child, recyclerView.getChildPosition(child));
-                    }
-                }
-            });
-        }
- 
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
- 
-            View child = rv.findChildViewUnder(e.getX(), e.getY());
-            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
-                clickListener.onClick(child, rv.getChildPosition(child));
-            }
-            return false;
-        }
- 
-        @Override
-        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-        }
- 
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
- 
-        }
-    }
-```
-
-Finally add the recycler view item click listener as mentioned below.
-
-```java
-recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                Movie movie = movieList.get(position);
-                Toast.makeText(getApplicationContext(), movie.getTitle() + " is selected!", Toast.LENGTH_SHORT).show();
-            }
- 
-            @Override
-            public void onLongClick(View view, int position) {
- 
-            }
-        }));
-```
+Use Library
+[RecycleClick](https://github.com/ChathuraHettiarachchi/RecycleClick)
 
 **Run the app and verify the item click. You should able to see a toast message upon clicking on a row. You can also notice that a background ripple effect when testing on lollipop device.**
